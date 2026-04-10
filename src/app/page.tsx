@@ -278,34 +278,27 @@ export default function Home() {
         </div>
 
         {orthodoxDay && timeOfDay && (
-          <div className="selection-bar rounded-xl p-6 mb-8 text-left">
-            <div className="grid grid-cols-2 gap-4 text-sm font-sans">
+          <div className="selection-bar rounded-xl p-5 mb-8 text-left">
+            <div className="flex flex-col gap-3 text-sm font-sans">
               <div>
-                <span className="text-v-muted block text-xs uppercase tracking-wider mb-1">{t.time}</span>
-                <span className="font-medium text-v-foreground">{TIME_LABELS[lang][timeOfDay.period]}</span>
-                <span className="text-v-muted ml-1 text-xs">
+                <span className="font-medium text-v-foreground">
+                  {TIME_LABELS[lang][timeOfDay.period]}
+                </span>
+                <span className="text-v-muted ml-1.5 text-xs">
                   {now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
-              </div>
-              <div>
-                <span className="text-v-muted block text-xs uppercase tracking-wider mb-1">{t.date}</span>
-                <span className="font-medium text-v-foreground text-xs">
+                <span className="text-v-muted mx-1.5">·</span>
+                <span className="text-v-muted text-xs">
                   {now.toLocaleDateString(lang === 'el' ? 'el-GR' : undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
                 </span>
               </div>
-              <div className="col-span-2">
-                <span className="text-v-muted block text-xs uppercase tracking-wider mb-1">{t.today}</span>
-                <span className="font-medium text-v-accent">
-                  {orthodoxDay.name}
-                </span>
+              <div className="border-t border-v-surface pt-3" style={{ borderColor: 'var(--surface-border)' }}>
+                <span className="font-medium text-v-accent">{orthodoxDay.name}</span>
                 {orthodoxDay.description && (
-                  <p className="text-xs text-v-muted mt-1">{orthodoxDay.description}</p>
+                  <span className="text-v-muted text-xs ml-2">{orthodoxDay.description}</span>
                 )}
               </div>
-              <div>
-                <span className="text-v-muted block text-xs uppercase tracking-wider mb-1">{t.timezone}</span>
-                <span className="font-medium text-v-foreground text-xs">{timezone.replace(/_/g, ' ')}</span>
-              </div>
+              <div className="text-xs text-v-muted">{timezone.replace(/_/g, ' ')}</div>
             </div>
           </div>
         )}
