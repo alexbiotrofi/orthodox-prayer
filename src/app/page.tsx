@@ -21,14 +21,6 @@ function PrayerCard({ prayer, index }: { prayer: Prayer; index: number }) {
     kontakion: 'Kontakion',
   };
 
-  const typeColor: Record<string, string> = {
-    prayer: 'bg-burgundy/10 text-burgundy',
-    psalm: 'bg-blue-100 text-blue-800',
-    scripture: 'bg-green-100 text-green-800',
-    troparion: 'bg-gold/20 text-gold-dark',
-    kontakion: 'bg-gold/20 text-gold-dark',
-  };
-
   const showBadge = prayer.type !== 'prayer';
 
   return (
@@ -38,16 +30,16 @@ function PrayerCard({ prayer, index }: { prayer: Prayer; index: number }) {
     >
       {showBadge && (
         <div className="mb-3">
-          <span className={`text-xs font-sans font-medium px-2 py-0.5 rounded-full ${typeColor[prayer.type] || 'bg-gray-100 text-gray-700'}`}>
+          <span className="text-xs font-sans font-medium px-2 py-0.5 rounded-full bg-white/10 text-accent-dim">
             {typeLabel[prayer.type] || prayer.type}
           </span>
         </div>
       )}
-      <h3 className="text-lg font-semibold text-gold-dark mb-2">{prayer.title}</h3>
+      <h3 className="text-lg font-semibold text-accent mb-2">{prayer.title}</h3>
       {prayer.rubric && (
         <p className="rubric text-sm mb-3">{prayer.rubric}</p>
       )}
-      <div className="prayer-text text-base leading-relaxed whitespace-pre-line">
+      <div className="prayer-text text-base leading-relaxed whitespace-pre-line text-foreground">
         {prayer.text}
       </div>
     </div>
@@ -100,19 +92,10 @@ export default function Home() {
   if (!now) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="text-gold text-2xl orthodox-cross"></div>
+        <div className="text-accent-dim text-2xl orthodox-cross"></div>
       </div>
     );
   }
-
-  const dayColorMap: Record<string, string> = {
-    'red': 'text-red-700',
-    'purple': 'text-purple-800',
-    'green': 'text-green-700',
-    'gold': 'text-gold-dark',
-    'white': 'text-gray-600',
-    'blue': 'text-blue-700',
-  };
 
   // Prayer display view
   if (showPrayers && prayerRule && orthodoxDay && timeOfDay) {
@@ -122,12 +105,12 @@ export default function Home() {
         <div className="text-center mb-8">
           <button
             onClick={handleBack}
-            className="font-sans text-sm text-text-muted hover:text-gold-dark transition-colors mb-4 inline-flex items-center gap-1"
+            className="font-sans text-sm text-text-muted hover:text-accent transition-colors mb-4 inline-flex items-center gap-1"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
             Back
           </button>
-          <h1 className="text-2xl font-bold text-gold-dark mb-1">
+          <h1 className="text-2xl font-bold text-accent mb-1">
             {timeOfDay.label} Prayers
           </h1>
           <p className="text-sm text-text-muted font-sans">
@@ -139,7 +122,7 @@ export default function Home() {
 
         {/* Opening Prayers */}
         <div className="mb-6">
-          <h2 className="text-xs font-sans font-semibold uppercase tracking-widest text-gold mb-6">Opening Prayers</h2>
+          <h2 className="text-xs font-sans font-semibold uppercase tracking-widest text-accent-dim mb-6">Opening Prayers</h2>
           {prayerRule.opening.map((prayer, i) => (
             <PrayerCard key={`opening-${i}`} prayer={prayer} index={i} />
           ))}
@@ -149,7 +132,7 @@ export default function Home() {
 
         {/* Body */}
         <div className="mb-6">
-          <h2 className="text-xs font-sans font-semibold uppercase tracking-widest text-gold mb-6">
+          <h2 className="text-xs font-sans font-semibold uppercase tracking-widest text-accent-dim mb-6">
             {timeOfDay.label} Rule
           </h2>
           {prayerRule.body.map((prayer, i) => (
@@ -161,7 +144,7 @@ export default function Home() {
 
         {/* Closing Prayers */}
         <div className="mb-6">
-          <h2 className="text-xs font-sans font-semibold uppercase tracking-widest text-gold mb-6">Closing</h2>
+          <h2 className="text-xs font-sans font-semibold uppercase tracking-widest text-accent-dim mb-6">Closing</h2>
           {prayerRule.closing.map((prayer, i) => (
             <PrayerCard key={`closing-${i}`} prayer={prayer} index={i + prayerRule.opening.length + prayerRule.body.length} />
           ))}
@@ -183,8 +166,8 @@ export default function Home() {
       <div className="max-w-lg w-full text-center">
         {/* Cross and title */}
         <div className="mb-8">
-          <div className="text-5xl text-gold mb-4 orthodox-cross"></div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <div className="text-5xl text-accent-dim mb-4 orthodox-cross"></div>
+          <h1 className="text-3xl font-bold text-accent mb-2">
             Orthodox Prayer
           </h1>
           <p className="text-text-muted text-sm font-sans">
@@ -198,20 +181,20 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-4 text-sm font-sans">
               <div>
                 <span className="text-text-muted block text-xs uppercase tracking-wider mb-1">Time</span>
-                <span className="font-medium">{timeOfDay.label}</span>
+                <span className="font-medium text-foreground">{timeOfDay.label}</span>
                 <span className="text-text-muted ml-1 text-xs">
                   {now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
               <div>
                 <span className="text-text-muted block text-xs uppercase tracking-wider mb-1">Date</span>
-                <span className="font-medium text-xs">
+                <span className="font-medium text-foreground text-xs">
                   {now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}
                 </span>
               </div>
               <div className="col-span-2">
                 <span className="text-text-muted block text-xs uppercase tracking-wider mb-1">Today</span>
-                <span className={`font-medium ${dayColorMap[orthodoxDay.color] || 'text-foreground'}`}>
+                <span className="font-medium text-accent">
                   {orthodoxDay.name}
                 </span>
                 {orthodoxDay.description && (
@@ -220,11 +203,11 @@ export default function Home() {
               </div>
               <div>
                 <span className="text-text-muted block text-xs uppercase tracking-wider mb-1">Tone</span>
-                <span className="font-medium">{tone}</span>
+                <span className="font-medium text-foreground">{tone}</span>
               </div>
               <div>
                 <span className="text-text-muted block text-xs uppercase tracking-wider mb-1">Timezone</span>
-                <span className="font-medium text-xs">{timezone.replace(/_/g, ' ')}</span>
+                <span className="font-medium text-foreground text-xs">{timezone.replace(/_/g, ' ')}</span>
               </div>
             </div>
           </div>
@@ -232,7 +215,7 @@ export default function Home() {
 
         {/* Duration selection */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold mb-1">How much time do you have?</h2>
+          <h2 className="text-lg font-semibold text-accent mb-1">How much time do you have?</h2>
           <p className="text-sm text-text-muted font-sans mb-6">
             Select your prayer time and receive a tailored rule
           </p>
@@ -241,9 +224,9 @@ export default function Home() {
               <button
                 key={d}
                 onClick={() => handleSelectDuration(d)}
-                className="duration-btn rounded-xl border border-gold-light bg-cream px-3 py-4 text-center font-sans font-medium text-foreground hover:border-gold focus:outline-none focus:ring-2 focus:ring-gold/50"
+                className="duration-btn rounded-xl border border-surface-border bg-surface px-3 py-4 text-center font-sans font-medium text-foreground hover:border-accent-dim focus:outline-none focus:ring-2 focus:ring-white/20"
               >
-                <span className="block text-xl font-bold text-gold-dark">{d}</span>
+                <span className="block text-xl font-bold text-accent">{d}</span>
                 <span className="block text-xs text-text-muted mt-0.5">min</span>
               </button>
             ))}
