@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getTimeOfDay, getOrthodoxDay } from '@/lib/orthodox-calendar';
 import { getPrayerRule } from '@/lib/prayers';
+import { occasions, getOccasionById } from '@/lib/occasions';
 import type { PrayerRule, Prayer, Lang } from '@/lib/prayers';
 import type { OrthodoxDay, TimeOfDay } from '@/lib/orthodox-calendar';
 
@@ -18,6 +19,8 @@ const UI_TEXT: Record<Lang, {
   question: string;
   questionSub: string;
   min: string;
+  occasion: string;
+  occasionNone: string;
   footer: string;
   back: string;
   prayers: string;
@@ -36,6 +39,8 @@ const UI_TEXT: Record<Lang, {
     question: 'How much time do you have?',
     questionSub: 'Select your prayer time and receive a tailored rule',
     min: 'min',
+    occasion: 'Praying for something specific?',
+    occasionNone: 'No specific occasion',
     footer: 'Prayers are selected based on the time of day, the Orthodox liturgical calendar, and the duration you choose.',
     back: 'Back',
     prayers: 'Prayers',
@@ -54,6 +59,8 @@ const UI_TEXT: Record<Lang, {
     question: 'Πόσο χρόνο έχεις;',
     questionSub: 'Επίλεξε τον χρόνο προσευχής σου',
     min: 'λεπ',
+    occasion: 'Προσεύχεσαι για κάτι συγκεκριμένο;',
+    occasionNone: 'Χωρίς συγκεκριμένη αφορμή',
     footer: 'Οι προσευχές επιλέγονται βάσει της ώρας, του Ορθοδόξου λειτουργικού ημερολογίου και της διάρκειας που επιλέγεις.',
     back: 'Πίσω',
     prayers: 'Προσευχές',
@@ -138,6 +145,7 @@ export default function Home() {
   const [showPrayers, setShowPrayers] = useState(false);
   const [lang, setLang] = useState<Lang>('en');
   const [dark, setDark] = useState(true);
+  const [occasionId, setOccasionId] = useState<string>('');
 
   useEffect(() => {
     const d = new Date();
@@ -170,8 +178,9 @@ export default function Home() {
 
   const prayerRule: PrayerRule | null = useMemo(() => {
     if (!now || !selectedDuration || !timeOfDay || !orthodoxDay) return null;
-    return getPrayerRule(timeOfDay.period, selectedDuration, orthodoxDay, now);
-  }, [now, selectedDuration, timeOfDay, orthodoxDay]);
+    const occasion = occasionId ? getOccasionById(occasionId) : undefined;
+    return getPrayerRule(timeOfDay.period, selectedDuration, orthodoxDay, now, occasion?.prayers);
+  }, [now, selectedDuration, timeOfDay, orthodoxDay, occasionId]);
 
   const handleSelectDuration = (minutes: number) => {
     setSelectedDuration(minutes);
@@ -217,6 +226,10 @@ export default function Home() {
           </h1>
           <p className="text-sm text-v-muted font-sans">
             {selectedDuration} {t.min} &middot; {orthodoxDay.name}
+            {occasionId && (() => {
+              const occ = getOccasionById(occasionId);
+              return occ ? <><br />{occ.label[lang]}</> : null;
+            })()}
           </p>
         </div>
 
@@ -302,6 +315,21 @@ export default function Home() {
             </div>
           </div>
         )}
+
+        {/* Occasion selector */}
+        <div className="mb-6">
+          <p className="text-sm text-v-muted font-sans mb-2">{t.occasion}</p>
+          <select
+            value={occasionId}
+            onChange={(e) => setOccasionId(e.target.value)}
+            className="font-sans text-sm bg-v-surface border-v-surface text-v-foreground rounded-lg px-4 py-2.5 border focus:outline-none cursor-pointer w-full max-w-xs"
+          >
+            <option value="">{t.occasionNone}</option>
+            {occasions.map(o => (
+              <option key={o.id} value={o.id}>{o.label[lang]}</option>
+            ))}
+          </select>
+        </div>
 
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-v-accent mb-1">{t.question}</h2>

@@ -433,7 +433,8 @@ export function getPrayerRule(
   period: string,
   durationMinutes: number,
   orthodoxDay: { name: string; type: string },
-  date: Date
+  date: Date,
+  occasionPrayers?: Prayer[]
 ): PrayerRule {
   const opening = [...trisagionPrayers];
   const closing = [...closingPrayers];
@@ -442,7 +443,17 @@ export function getPrayerRule(
   const usedTime = opening.reduce((s, p) => s + p.duration, 0) + closing.reduce((s, p) => s + p.duration, 0);
   let remaining = durationMinutes - usedTime;
 
-  // Add feast-specific prayers first
+  // Add occasion-specific prayers first (highest priority)
+  if (occasionPrayers) {
+    for (const p of occasionPrayers) {
+      if (remaining >= p.duration) {
+        body.push(p);
+        remaining -= p.duration;
+      }
+    }
+  }
+
+  // Add feast-specific prayers
   const feastPrayers = getFeastPrayers(orthodoxDay, date);
   for (const p of feastPrayers) {
     if (remaining >= p.duration) {
