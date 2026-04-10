@@ -1,6 +1,16 @@
 @import "tailwindcss";
 
 :root {
+  --background: #faf8f4;
+  --foreground: #1a1a1a;
+  --accent: #111111;
+  --accent-dim: #666666;
+  --surface: #f0ede6;
+  --surface-border: #d8d4cb;
+  --text-muted: #888888;
+}
+
+.dark {
   --background: #0a0a0a;
   --foreground: #e8e8e8;
   --accent: #ffffff;
@@ -11,13 +21,6 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --color-accent-dim: var(--accent-dim);
-  --color-surface: var(--surface);
-  --color-surface-border: var(--surface-border);
-  --color-text-muted: var(--text-muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -26,6 +29,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Georgia', 'Times New Roman', serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Orthodox cross ornament */
@@ -67,16 +71,14 @@ body {
 /* Duration button animations */
 .duration-btn {
   transition: all 0.3s ease;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
 }
 
 .duration-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
-}
-
-.duration-btn.active {
-  background: white;
-  color: black;
+  box-shadow: 0 4px 16px rgba(128, 128, 128, 0.15);
+  border-color: var(--accent-dim);
 }
 
 /* Fade in animation */
@@ -94,3 +96,13 @@ body {
   background: var(--surface);
   border: 1px solid var(--surface-border);
 }
+
+/* Utility classes using CSS vars */
+.text-v-foreground { color: var(--foreground); }
+.text-v-accent { color: var(--accent); }
+.text-v-accent-dim { color: var(--accent-dim); }
+.text-v-muted { color: var(--text-muted); }
+.bg-v-surface { background: var(--surface); }
+.border-v-surface { border-color: var(--surface-border); }
+.bg-v-badge { background: rgba(128, 128, 128, 0.15); }
+.ring-v-focus { --tw-ring-color: rgba(128, 128, 128, 0.3); }
