@@ -1,26 +1,103 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf8f2;
+  --foreground: #2c2418;
+  --gold: #c4973b;
+  --gold-light: #e8d5a3;
+  --gold-dark: #8b6914;
+  --burgundy: #6b1d2a;
+  --burgundy-light: #8b3a4a;
+  --cream: #f5f0e3;
+  --parchment: #ede4cf;
+  --text-muted: #6b5e4f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-burgundy: var(--burgundy);
+  --color-burgundy-light: var(--burgundy-light);
+  --color-cream: var(--cream);
+  --color-parchment: var(--parchment);
+  --color-text-muted: var(--text-muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+/* Orthodox cross ornament */
+.orthodox-cross::before {
+  content: '☦';
+  display: inline-block;
+}
+
+/* Prayer text styling */
+.prayer-text {
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+}
+
+.prayer-text p {
+  margin-bottom: 1em;
+}
+
+/* Rubric (liturgical instruction) styling */
+.rubric {
+  font-style: italic;
+  color: var(--burgundy);
+}
+
+/* Smooth scroll for prayer sections */
+.prayer-section {
+  scroll-margin-top: 2rem;
+}
+
+/* Ornamental divider */
+.ornament {
+  text-align: center;
+  color: var(--gold);
+  font-size: 1.5rem;
+  letter-spacing: 0.5rem;
+  user-select: none;
+}
+
+/* Duration button animations */
+.duration-btn {
+  transition: all 0.3s ease;
+}
+
+.duration-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(196, 151, 59, 0.3);
+}
+
+.duration-btn.active {
+  background: var(--gold);
+  color: white;
+  box-shadow: 0 2px 8px rgba(196, 151, 59, 0.4);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Selection bar */
+.selection-bar {
+  background: linear-gradient(135deg, var(--cream), var(--parchment));
+  border: 1px solid var(--gold-light);
 }
