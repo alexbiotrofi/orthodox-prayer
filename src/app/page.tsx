@@ -29,17 +29,20 @@ function PrayerCard({ prayer, index }: { prayer: Prayer; index: number }) {
     kontakion: 'bg-gold/20 text-gold-dark',
   };
 
+  const showBadge = prayer.type !== 'prayer';
+
   return (
     <div
       className="prayer-section fade-in mb-8"
       style={{ animationDelay: `${index * 0.1}s` }}
     >
-      <div className="flex items-center gap-3 mb-3">
-        <span className={`text-xs font-sans font-medium px-2 py-0.5 rounded-full ${typeColor[prayer.type] || 'bg-gray-100 text-gray-700'}`}>
-          {typeLabel[prayer.type] || prayer.type}
-        </span>
-        <span className="text-xs text-text-muted font-sans">~{prayer.duration} min</span>
-      </div>
+      {showBadge && (
+        <div className="mb-3">
+          <span className={`text-xs font-sans font-medium px-2 py-0.5 rounded-full ${typeColor[prayer.type] || 'bg-gray-100 text-gray-700'}`}>
+            {typeLabel[prayer.type] || prayer.type}
+          </span>
+        </div>
+      )}
       <h3 className="text-lg font-semibold text-gold-dark mb-2">{prayer.title}</h3>
       {prayer.rubric && (
         <p className="rubric text-sm mb-3">{prayer.rubric}</p>
