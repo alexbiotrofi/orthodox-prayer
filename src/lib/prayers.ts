@@ -1,6 +1,8 @@
 // Orthodox prayer content organized by time of day and duration
 // Bilingual: English (en) and Greek (el)
 
+import { calculatePascha } from './orthodox-calendar';
+
 export type Lang = 'en' | 'el';
 
 export interface Prayer {
@@ -96,15 +98,6 @@ const morningPrayers: Prayer[] = [
     },
   },
   {
-    title: { en: 'Morning Prayer of Dedication', el: 'Πρωινὴ Προσευχὴ Ἀφιερώσεως' },
-    type: 'prayer',
-    duration: 1.5,
-    text: {
-      en: 'O Lord, grant me to greet the coming day in peace. Help me in all things to rely upon Thy holy will. In every hour of the day reveal Thy will to me. Bless my dealings with all who surround me. Teach me to treat all that comes to me throughout the day with peace of soul, and with firm conviction that Thy will governs all.\n\nIn all my deeds and words guide my thoughts and feelings. In unforeseen events let me not forget that all are sent by Thee. Teach me to act firmly and wisely, without embittering and embarrassing others. Give me strength to bear the fatigue of the coming day with all that it shall bring.\n\nDirect my will, teach me to pray, pray Thou Thyself in me. Amen.',
-      el: 'Κύριε, δός μοι τὴν ἐρχομένην ἡμέραν ἐν εἰρήνῃ νὰ ὑποδεχθῶ. Βοήθησέ με ἐν πᾶσι νὰ στηρίζωμαι εἰς τὸ ἅγιον θέλημά Σου. Ἐν πάσῃ ὥρᾳ τῆς ἡμέρας ἀποκάλυψόν μοι τὸ θέλημά Σου. Εὐλόγησον τὰς σχέσεις μου μετὰ πάντων τῶν πέριξ μου. Δίδαξόν με νὰ δέχωμαι πᾶν ὅ,τι μοὶ συμβαίνει καθ᾽ ὅλην τὴν ἡμέραν μετὰ γαλήνης ψυχῆς καὶ σταθερᾶς πεποιθήσεως ὅτι τὸ θέλημά Σου κυβερνᾷ τὰ πάντα.\n\nἘν πᾶσι τοῖς ἔργοις μου καὶ τοῖς λόγοις μου κατεύθυνον τοὺς λογισμούς μου καὶ τὰ αἰσθήματά μου. Εἰς τὰ ἀπρόοπτα μὴ μὲ ἀφήσῃς νὰ λησμονήσω ὅτι πάντα ἀπὸ Σὲ ἐστάλησαν. Δίδαξόν με νὰ ἐνεργῶ σταθερῶς καὶ σοφῶς, χωρὶς νὰ πικραίνω καὶ νὰ ἐντροπιάζω τοὺς ἄλλους. Δός μοι δύναμιν νὰ ὑποφέρω τὸν κόπον τῆς ἐρχομένης ἡμέρας μετὰ πάντων ὅσα θὰ φέρῃ.\n\nΚατεύθυνον τὸ θέλημά μου, δίδαξόν με νὰ προσεύχωμαι, προσεύχου Σὺ ὁ Ἴδιος ἐν ἐμοί. Ἀμήν.',
-    },
-  },
-  {
     title: { en: 'Prayer to the Theotokos', el: 'Προσευχὴ πρὸς τὴν Θεοτόκον' },
     type: 'prayer',
     duration: 1,
@@ -142,7 +135,7 @@ const middayPrayers: Prayer[] = [
     duration: 1,
     rubric: { en: 'With prostrations during Great Lent:', el: 'Μετὰ μετανοιῶν κατὰ τὴν Μεγάλην Τεσσαρακοστήν:' },
     text: {
-      en: 'O Lord and Master of my life, take from me the spirit of sloth, despair, lust of power, and idle talk.\n\nBut give rather the spirit of chastity, humility, patience, and love to Thy servant.\n\nYea, O Lord and King, grant me to see my own transgressions, and not to judge my brother, for blessed art Thou, unto ages of ages. Amen.',
+      en: 'O Lord and Master of my life, take from me the spirit of sloth, meddlesomeness, lust of power, and idle talk.\n\nBut give rather the spirit of wholeness, humility, patience, and love to Thy servant.\n\nYea, O Lord and King, grant me to see my own transgressions, and not to judge my brother, for blessed art Thou, unto ages of ages. Amen.',
       el: 'Κύριε καὶ Δέσποτα τῆς ζωῆς μου, πνεῦμα ἀργίας, περιεργίας, φιλαρχίας, καὶ ἀργολογίας μή μοι δῷς.\n\nΠνεῦμα δὲ σωφροσύνης, ταπεινοφροσύνης, ὑπομονῆς, καὶ ἀγάπης χάρισαί μοι τῷ σῷ δούλῳ.\n\nΝαί, Κύριε Βασιλεῦ, δώρησαί μοι τοῦ ὁρᾶν τὰ ἐμὰ πταίσματα, καὶ μὴ κατακρίνειν τὸν ἀδελφόν μου· ὅτι εὐλογητὸς εἶ εἰς τοὺς αἰῶνας τῶν αἰώνων. Ἀμήν.',
     },
   },
@@ -291,7 +284,7 @@ const tropariaKontakia: Prayer[] = [
     duration: 0.5,
     text: {
       en: 'O Lord, save Thy people and bless Thine inheritance, granting victories to the faithful over their adversaries, and by virtue of Thy Cross, preserving Thy habitation.',
-      el: 'Σῶσον, Κύριε, τὸν λαόν Σου καὶ εὐλόγησον τὴν κληρονομίαν Σου, νίκας τοῖς βασιλεῦσι κατὰ βαρβάρων δωρούμενος, καὶ τὸ Σὸν φυλάττων διὰ τοῦ Σταυροῦ Σου πολίτευμα.',
+      el: 'Σῶσον, Κύριε, τὸν λαόν Σου καὶ εὐλόγησον τὴν κληρονομίαν Σου, νίκας τοῖς πιστοῖς κατὰ τῶν ἐναντίων δωρούμενος, καὶ τὸ Σὸν φυλάττων διὰ τοῦ Σταυροῦ Σου πολίτευμα.',
     },
   },
   {
@@ -388,7 +381,7 @@ const crossPrayers: Prayer[] = [
     duration: 0.5,
     text: {
       en: 'O Lord, save Thy people, and bless Thine inheritance. Grant victory to the faithful over their adversaries, and by the virtue of Thy Cross, preserve Thy habitation.',
-      el: 'Σῶσον, Κύριε, τὸν λαόν Σου καὶ εὐλόγησον τὴν κληρονομίαν Σου, νίκας τοῖς βασιλεῦσι κατὰ βαρβάρων δωρούμενος, καὶ τὸ Σὸν φυλάττων διὰ τοῦ Σταυροῦ Σου πολίτευμα.',
+      el: 'Σῶσον, Κύριε, τὸν λαόν Σου καὶ εὐλόγησον τὴν κληρονομίαν Σου, νίκας τοῖς πιστοῖς κατὰ τῶν ἐναντίων δωρούμενος, καὶ τὸ Σὸν φυλάττων διὰ τοῦ Σταυροῦ Σου πολίτευμα.',
     },
   },
 ];
@@ -400,7 +393,7 @@ const lentPrayers: Prayer[] = [
     duration: 1.5,
     rubric: { en: 'The signature prayer of Great Lent, said with prostrations:', el: 'Ἡ κατ᾽ ἐξοχὴν εὐχὴ τῆς Μεγάλης Τεσσαρακοστῆς, λεγομένη μετὰ μετανοιῶν:' },
     text: {
-      en: 'O Lord and Master of my life, take from me the spirit of sloth, despair, lust of power, and idle talk.\n\n(Prostration)\n\nBut give rather the spirit of chastity, humility, patience, and love to Thy servant.\n\n(Prostration)\n\nYea, O Lord and King, grant me to see my own transgressions, and not to judge my brother, for blessed art Thou, unto ages of ages. Amen.\n\n(Prostration)\n\nO God, cleanse me, a sinner. (12 times, with bows)\n\nThen repeat the whole prayer once more, with one prostration at the end.',
+      en: 'O Lord and Master of my life, take from me the spirit of sloth, meddlesomeness, lust of power, and idle talk.\n\n(Prostration)\n\nBut give rather the spirit of wholeness, humility, patience, and love to Thy servant.\n\n(Prostration)\n\nYea, O Lord and King, grant me to see my own transgressions, and not to judge my brother, for blessed art Thou, unto ages of ages. Amen.\n\n(Prostration)\n\nO God, cleanse me, a sinner. (12 times, with bows)\n\nThen repeat the whole prayer once more, with one prostration at the end.',
       el: 'Κύριε καὶ Δέσποτα τῆς ζωῆς μου, πνεῦμα ἀργίας, περιεργίας, φιλαρχίας, καὶ ἀργολογίας μή μοι δῷς.\n\n(Μετάνοια)\n\nΠνεῦμα δὲ σωφροσύνης, ταπεινοφροσύνης, ὑπομονῆς, καὶ ἀγάπης χάρισαί μοι τῷ σῷ δούλῳ.\n\n(Μετάνοια)\n\nΝαί, Κύριε Βασιλεῦ, δώρησαί μοι τοῦ ὁρᾶν τὰ ἐμὰ πταίσματα, καὶ μὴ κατακρίνειν τὸν ἀδελφόν μου· ὅτι εὐλογητὸς εἶ εἰς τοὺς αἰῶνας τῶν αἰώνων. Ἀμήν.\n\n(Μετάνοια)\n\nὉ Θεός, ἱλάσθητί μοι τῷ ἁμαρτωλῷ. (12 φορές, μετὰ ὑποκλίσεων)\n\nΕἶτα ἐπανέλαβε ὅλην τὴν εὐχήν, μετὰ μιᾶς μετανοίας εἰς τὸ τέλος.',
     },
   },
@@ -437,6 +430,22 @@ export function getPrayerRule(
   occasionPrayers?: Prayer[]
 ): PrayerRule {
   const opening = [...trisagionPrayers];
+
+  // Between Pascha and Pentecost, replace "O Heavenly King" with Paschal troparion
+  const pascha = calculatePascha(date.getFullYear());
+  const daysSincePascha = Math.round((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(pascha.getFullYear(), pascha.getMonth(), pascha.getDate())) / 86400000);
+  if (daysSincePascha >= 0 && daysSincePascha <= 49) {
+    opening[1] = {
+      title: { en: 'Paschal Troparion', el: 'Πασχάλιον Τροπάριον' },
+      type: 'troparion',
+      duration: 0.5,
+      text: {
+        en: 'Christ is risen from the dead, trampling down death by death, and upon those in the tombs bestowing life!',
+        el: 'Χριστὸς ἀνέστη ἐκ νεκρῶν, θανάτῳ θάνατον πατήσας, καὶ τοῖς ἐν τοῖς μνήμασι ζωὴν χαρισάμενος!',
+      },
+    };
+  }
+
   const closing = [...closingPrayers];
   const body: Prayer[] = [];
 

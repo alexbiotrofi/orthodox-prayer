@@ -129,6 +129,11 @@ export function getOrthodoxDay(date: Date): OrthodoxDay {
   if (diff === 50) return { name: 'Holy Spirit Monday', type: 'great-feast', color: 'green' };
   if (diff === 56) return { name: 'All Saints Sunday', type: 'feast', color: 'gold' };
 
+  // Clean Monday
+  if (diff === -48) {
+    return { name: 'Clean Monday', type: 'fast', color: 'purple', description: 'First day of Great Lent — strict fast' };
+  }
+
   // Great Lent
   if (diff >= -48 && diff <= -7) {
     return { name: 'Great Lent', type: 'fast', color: 'purple', description: 'The Great Fast - a time of repentance and prayer' };
@@ -171,7 +176,11 @@ export function getOrthodoxDay(date: Date): OrthodoxDay {
     // Check if in a fast-free week
     const isBrightWeek = diff >= 0 && diff <= 6;
     const isWeekAfterPentecost = diff >= 49 && diff <= 55;
-    if (!isBrightWeek && !isWeekAfterPentecost) {
+    const isPublicanPhariseeWeek = diff >= -49 && diff <= -43;
+    const isCheesfareWeek = diff >= -28 && diff <= -22;
+    const isChristmasToTheophany = (month === 12 && day >= 25) || (month === 1 && day <= 4);
+    const isWeekAfterTheophany = month === 1 && day >= 7 && day <= 13;
+    if (!isBrightWeek && !isWeekAfterPentecost && !isPublicanPhariseeWeek && !isCheesfareWeek && !isChristmasToTheophany && !isWeekAfterTheophany) {
       return { name: dayOfWeek === 3 ? 'Wednesday Fast' : 'Friday Fast', type: 'fast', color: 'purple', description: 'Regular weekly fast day' };
     }
   }
